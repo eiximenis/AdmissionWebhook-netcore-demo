@@ -1,0 +1,42 @@
+{{- $altNames := list ( printf "%s.%s" (include "samplewh.name" .) .Release.Namespace ) ( printf "%s.%s.svc" (include "samplewh.name" .) .Release.Namespace ) -}}
+{{- $ca := genCA "samplewh-ca" 365 -}}
+{{- $cert := genSignedCert ( include "samplewh.name" . ) nil $altNames 365 $ca -}}
+
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ template "samplewh.name" . }}.eiximenis.dev
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "samplewh.name" . }}
+webhooks:
+  - name: {{ template "samplewh.name" . }}.eiximenis.dev
+    failurePolicy: Ignore
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: {{ template "samplewh.name" . }}
+        namespace: {{ .Release.Namespace }}
+        path: "/validate"
+      caBundle: {{ $ca.Cert | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/tls
+metadata:
+  name: {{ template "samplewh.name" . }}-tls-secrets
+  labels:
+    app: {{ template "samplewh.name" . }}
+    chart: {{ template "samplewh.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+data:
+  tls.crt: {{ $cert.Cert | b64enc }}
+  tls.key: {{ $cert.Key | b64enc }}

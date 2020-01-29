@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "samplewh.fullname" . }}
+  labels:
+{{ include "samplewh.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "samplewh.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "samplewh.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: tls-secrets
+          secret:
+            secretName: {{ template "samplewh.name" . }}-tls-secrets   
+        - name: entrypoint-vol
+          configMap:
+            name: {{ include "samplewh.name" . }}-cm
+            defaultMode: 0777
+        - name: pfx
+          emptyDir: {}
+      initContainers:
+        - name: {{ .Chart.Name }}-pfx-conv
+          image: alpine
+          command: ["/bin/sh"]
+          args: ["-c", "/init/entrypoint.sh"]
+          volumeMounts:
+            - name: pfx
+              mountPath: /var/lib/pfx
+            - name: entrypoint-vol
+              mountPath: /init
+            - name: tls-secrets
+              mountPath: /var/lib/secrets     
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: pfx
+              mountPath: /var/lib/pfx
+          ports:
+            - name: https
+              containerPort: 443
+              protocol: TCP
+          env:
+            - name: Kestrel__Certificates__Default__Path
+              value: /var/lib/pfx/cert.pfx
+            - name: Kestrel__Certificates__Default__Password
+              value: Passw0rd
+            - name: Kestrel__Endpoints__Https__Url
+              value: https://*:443

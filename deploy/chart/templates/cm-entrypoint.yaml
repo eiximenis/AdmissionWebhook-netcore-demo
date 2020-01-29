@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "samplewh.name" . }}-cm
+data:
+  entrypoint.sh: |-
+{{ .Files.Get "entrypoint.sh" | indent 4}}

@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29721.120
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdmissionWebhook", "AdmissionWebhook\AdmissionWebhook.csproj", "{49F2C1FF-DAED-446B-8A46-B2FED451A304}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9171DE71-6EB0-4F85-BAB0-ED80662512C7}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{49F2C1FF-DAED-446B-8A46-B2FED451A304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49F2C1FF-DAED-446B-8A46-B2FED451A304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49F2C1FF-DAED-446B-8A46-B2FED451A304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49F2C1FF-DAED-446B-8A46-B2FED451A304}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F97B0573-B064-46D2-9037-0123E028EDFB}
+	EndGlobalSection
+EndGlobal

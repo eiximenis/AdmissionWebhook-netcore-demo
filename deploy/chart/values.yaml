@@ -1,0 +1,8 @@
+replicaCount: 1
+image:
+  repository: admissionwebhook
+  tag: latest
+  pullPolicy: Never
+
+nameOverride: ""
+fullnameOverride: ""

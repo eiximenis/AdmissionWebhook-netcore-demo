@@ -1,0 +1,9 @@
+++++ Certificate information ++++
+
+cn = {{ include "samplewh.name" . }}
+alt1 = {{  printf "%s.%s" (include "samplewh.name" .) .Release.Namespace  }}
+alt2 =  {{ printf "%s.%s.svc" (include "samplewh.name" .) .Release.Namespace }}
+
++++ Svc generated
+
+name = {{ include "samplewh.name" . }}
